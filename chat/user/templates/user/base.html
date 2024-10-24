@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%block title%}<title>Homepage</title>{%endblock%}
+</head>
+<body>
+    {%block content%}
+
+    {%if user.is_authenticated%}
+
+    <div>
+        <form action="{% url 'logout'%}" method="post">
+            {%csrf_token%}
+            <button type="submit">Logout</button>
+
+        </form>
+        
+        <a href="{% url 'profile' user.profile.pk%}">Profile</a>
+    </div>
+
+    {%else%}
+       <div>
+        <a href="{% url 'register'%}">register</a>
+        <a href="{%url 'login' %}">login</a>
+       </div>
+    {%endif%}
+       
+    {%endblock%}
+</body>
+</html>

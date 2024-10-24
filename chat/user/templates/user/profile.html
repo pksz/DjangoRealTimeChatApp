@@ -1,0 +1,21 @@
+{%extends "user/base.html"%}
+
+{%block content%}
+
+<div>
+    <h1>profile page</h1>
+</div>
+
+<div>
+    <li>{{ user.profile.avatar}}</li>
+    <img src="{{user.profile.avatar}}" alt="profile.pic">
+    <li>
+    <ul> username : {{user.username}}</ul>
+    <ul> displayname : {{user.profile.displayname}}</ul>
+    <ul> description : {{user.profile.info}}</ul>
+    </li>
+</div>
+
+<a href="{%url 'update' user.profile.pk %}"> Update Profile</a>
+<a href="{%url 'home'  %}"> Home</a>
+{%endblock%}
