@@ -1,0 +1,30 @@
+{%extends "user/base.html" %}
+
+{%block content%}
+<h1>{{object.group_name}}</h1>
+<div>
+    <a href="{%url 'chats'%}">All chats</a>
+</div>
+
+<div>
+    {%if sent_chats %}
+
+        {%for message in sent_chats.reverse%}
+            <ul>{{message.author}} : {{message.chat_message}}</ul>
+        {%endfor%}
+
+    {%else%}
+        <ul>No message yet</ul>
+
+    {%endif%}
+    
+    </div>
+            <form action="" method="post">
+                {%csrf_token%}
+                {{form.as_p}}
+                <button type="submit">Send</button>
+            </form>
+    <div>
+
+</div>
+{%endblock%}

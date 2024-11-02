@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'user.apps.UserConfig',
+    'room',
 
 ]
 

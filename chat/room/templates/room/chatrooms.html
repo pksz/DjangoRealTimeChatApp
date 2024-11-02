@@ -1,0 +1,18 @@
+{%extends "user/base.html" %}
+
+{%block content%}
+<h1>group</h1>
+
+
+<div>
+    {%for groupname in object_list%}
+       <a href="{%url 'group' groupname.pk %}">{{groupname}}</a> 
+    {%endfor%}
+</div>
+<div>
+    <a href="#">Create new group</a>
+    <a href="{%url 'home'%}">Home</a>
+</div>
+
+
+{%endblock%}
