@@ -16,6 +16,9 @@ class ChatRoom(LoginRequiredMixin,ListView):
     model=Group
     template_name='room/chatrooms.html'
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context= super().get_context_data(**kwargs)
+        return context
 
 class ChatGroup(LoginRequiredMixin,DetailView):
     model=Group
@@ -25,6 +28,8 @@ class ChatGroup(LoginRequiredMixin,DetailView):
         context= super().get_context_data(**kwargs)
         context['sent_chats']=GroupMessage.objects.filter(group=self.object)
         context['form']=CreateMessage()
+        context['room_name']=Group.objects.get(id=self.kwargs['pk'])
+        print(context['room_name'])
         return context
 
 
@@ -62,11 +67,4 @@ class ChatView(LoginRequiredMixin,View):
   def post(self, request, *args, **kwargs):
       view = ChatForm.as_view()
 
-      #msg=CreateMessage(request.POST)
-      #msg.instance.author = request.user
-      #msg.instance.group=Group.objects.get(id=self.kwargs['pk'])
-      
-
-      #if msg.is_valid():
-           # msg.save(   )
       return view(request, *args, **kwargs)

@@ -28,3 +28,22 @@
 
 </div>
 {%endblock%}
+
+
+{%block scripts%}
+<!--need to access the pk of the curently selected group to-->
+{{ object.pk|json_script:"room-name" }}
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+    );
+
+  
+</script>
+{%endblock%}

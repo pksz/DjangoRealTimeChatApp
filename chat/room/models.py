@@ -7,6 +7,7 @@ class Group(models.Model):
     group_description=models.TextField(blank=True,null=True)
     #optional
     #group_icon= models.ImageField(blank=True,null=True)
+    #slug=models.SlugField()
 
     def __str__(self) -> str:
         return self.group_name
