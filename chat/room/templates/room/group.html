@@ -6,7 +6,7 @@
     <a href="{%url 'chats'%}">All chats</a>
 </div>
 
-<div>
+<div id="chat-log">
     {%if sent_chats %}
 
         {%for message in sent_chats.reverse%}
@@ -19,10 +19,10 @@
     {%endif%}
     
     </div>
-            <form action="" method="post">
+            <form action="" method="post" id="message-form">
                 {%csrf_token%}
                 {{form.as_p}}
-                <button type="submit">Send</button>
+                <button type="submit" id="#chat-message-submit'">Send</button>
             </form>
     <div>
 
@@ -44,6 +44,17 @@
         + '/'
     );
 
-  
+    chatSocket.onmessage=function(e){
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').value += (data.message + '\n'); 
+        console.log("success")    
+        }
+
+    chatSocket.onclose=function(e){
+        console.error('Chat socket closed unexpectedly');
+        console.error(e)
+        }
+    
+    
 </script>
 {%endblock%}

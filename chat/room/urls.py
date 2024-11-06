@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns=[
     path('',views.ChatRoom.as_view(),name='chats'),
-    path('<str:pk>/',views.ChatView.as_view(),name='group'),
+    path('<int:pk>/',views.ChatView.as_view(),name='group'),
 ]

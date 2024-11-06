@@ -29,7 +29,6 @@ class ChatGroup(LoginRequiredMixin,DetailView):
         context['sent_chats']=GroupMessage.objects.filter(group=self.object)
         context['form']=CreateMessage()
         context['room_name']=Group.objects.get(id=self.kwargs['pk'])
-        print(context['room_name'])
         return context
 
 
