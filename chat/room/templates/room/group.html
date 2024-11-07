@@ -19,23 +19,22 @@
     {%endif%}
     
     </div>
-            <form action="" method="post" id="message-form">
+            <form action="" method="post" id="myForm">
                 {%csrf_token%}
                 {{form.as_p}}
-                <button type="submit" id="#chat-message-submit'">Send</button>
+                <button type="submit">Send</button>
             </form>
     <div>
 
+        <div id="response"></div>
 </div>
 {%endblock%}
 
-
 {%block scripts%}
-<!--need to access the pk of the curently selected group to-->
-{{ object.pk|json_script:"room-name" }}
+{{object.pk|json_script:"room-name"}}
 <script>
-    const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
+    // Connect to WebSocket
+    const roomName=JSON.parse(document.getElementById('room-name').textContent)
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
@@ -44,17 +43,29 @@
         + '/'
     );
 
-    chatSocket.onmessage=function(e){
-        const data = JSON.parse(e.data);
-        document.querySelector('#chat-log').value += (data.message + '\n'); 
-        console.log("success")    
-        }
+    const form = document.getElementById('myForm');
+    const responseDiv = document.getElementById('response');
 
-    chatSocket.onclose=function(e){
-        console.error('Chat socket closed unexpectedly');
-        console.error(e)
+    // Form submission event
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent traditional form submission
+
+        // Gather form data
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries()); // Convert to an object
+
+        // Send form data as JSON over WebSocket
+        chatSocket.send(JSON.stringify(data));
+    });
+
+    // Handle messages from the server
+    chatSocket.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.success) {
+            responseDiv.innerHTML = data.message;
+        } else {
+            responseDiv.innerHTML = JSON.stringify(data.errors);
         }
-    
-    
+    };
 </script>
 {%endblock%}

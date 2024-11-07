@@ -6,7 +6,8 @@
 
 <div>
     {%for groupname in object_list%}
-       <a href="{%url 'group' groupname.pk  %}">{{groupname}}</a> 
+       <a href="{%url 'group' groupname.pk %}">{{groupname}} </a>
+       
     {%endfor%}
 </div>
 <div>
@@ -15,20 +16,4 @@
 </div>
 
 
-{%endblock%}
-<!--
-{%block scripts%}
-<script>
-    document.querySelector('#room-name-input').focus();
-    document.querySelector('#room-name-input').onkeyup = function(e) {
-        if (e.key === 'Enter') {  // enter, return
-            document.querySelector('#room-name-submit').click();
-        }
-    };
-
-    document.querySelector('#room-name-submit').onclick = function(e) {
-        var roomName = document.querySelector('#room-name-input').value;
-        window.location.pathname = '/chat/' + roomName + '/';
-    };
-</script>
 {%endblock%}

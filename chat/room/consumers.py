@@ -10,10 +10,15 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         
         self.user=self.scope['user']
-        self.room_name=self.scope['url_route']['kwargs']['room_name']
-        print(self.room_name)
+        print(self.scope['url_route']['kwargs'])
+        self.room_name=self.scope['url_route']['kwargs']['pk']
         self.chatroom=get_object_or_404(Group,id=self.room_name)
         
+        async_to_sync(self.channel_layer.group_add(
+            self.channel_name,
+            self.chatroom,
+        ))
+       
         self.accept()
     
 
@@ -21,24 +26,19 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message_content = text_data_json["message"]
+        print(text_data_json)
 
-        self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                "type": "chat_message",
-                "user": self.user.username,
-                "message": message,
-            },
-        )
-
+        msg=text_data_json['chat_message']
 
         message=GroupMessage.objects.create(
-            group=self.room_name,
-            content=message_content,
-            author=self.user,   
-            
+            chat_message=msg,
+            author=self.user,
+            group=self.chatroom,
         )
+        
+        async_to_sync(self.channel_layer.group_send(self.chatroom,message))
+
+       
 
     def disconnect(self, code):
       pass

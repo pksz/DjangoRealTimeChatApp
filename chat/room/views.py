@@ -29,6 +29,9 @@ class ChatGroup(LoginRequiredMixin,DetailView):
         context['sent_chats']=GroupMessage.objects.filter(group=self.object)
         context['form']=CreateMessage()
         context['room_name']=Group.objects.get(id=self.kwargs['pk'])
+        y=self.kwargs['pk']
+
+        print(y)
         return context
 
 
@@ -42,13 +45,13 @@ class ChatForm(SingleObjectMixin, FormView):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return HttpResponseForbidden()
-        
-       # self.object = self.get_object()
+
         return super().post(request, *args, **kwargs)
     
 
     def form_valid(self, form):
-     post = self.get_object()
+     print('valid')
+     print(self.kwargs['pk'])
      myform = form.save(commit=False)
      #variales here
      myform.author =  self.request.user  
@@ -65,5 +68,4 @@ class ChatView(LoginRequiredMixin,View):
 
   def post(self, request, *args, **kwargs):
       view = ChatForm.as_view()
-
       return view(request, *args, **kwargs)
