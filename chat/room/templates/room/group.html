@@ -6,7 +6,7 @@
     <a href="{%url 'chats'%}">All chats</a>
 </div>
 
-<div id="chat-log">
+<div id="chatlog">
     {%if sent_chats %}
 
         {%for message in sent_chats.reverse%}
@@ -44,7 +44,7 @@
     );
 
     const form = document.getElementById('myForm');
-    const responseDiv = document.getElementById('response');
+    responseDiv=document.getElementById('response')
 
     // Form submission event
     form.addEventListener('submit', function(event) {
@@ -56,13 +56,14 @@
 
         // Send form data as JSON over WebSocket
         chatSocket.send(JSON.stringify(data));
+        
     });
 
     // Handle messages from the server
-    chatSocket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        if (data.success) {
-            responseDiv.innerHTML = data.message;
+    chatSocket.onmessage = function(event) {    //handles sent data
+        const data = JSON.parse(event.data);        //parses data from backend
+        if (data) {             //finds the message div and inserts the new message
+            document.querySelector('#chatlog').innerHTML += '<ul>'+ data.user +':'+ data.message +'</ul>';
         } else {
             responseDiv.innerHTML = JSON.stringify(data.errors);
         }
