@@ -5,7 +5,9 @@
 <div>
     <a href="{%url 'chats'%}">All chats</a>
 </div>
-
+<div id="online_count" >
+    Online users: <span id="user_count">0</span>
+</div>
 <div id="chatlog">
     {%if sent_chats %}
 
@@ -62,11 +64,24 @@
     // Handle messages from the server
     chatSocket.onmessage = function(event) {    //handles sent data
         const data = JSON.parse(event.data);        //parses data from backend
-        if (data) {             //finds the message div and inserts the new message
+        if (data.action==="send_message") {             //finds the message div and inserts the new message
             document.querySelector('#chatlog').innerHTML += '<ul>'+ data.user +':'+ data.message +'</ul>';
-        } else {
-            responseDiv.innerHTML = JSON.stringify(data.errors);
         }
+        //handles user online
+        
+        else if(data.action=="online_user_update"){
+            if (data.online_count!==undefined)
+                document.querySelector('#user_count').innerText = data.online_count;
+           // else data.online_count=0
+        }
+        
+        else {
+            console.log(data.errors)
+        }
+              
+        console.log(data.action)
+        console.log(event.data)
+        
     };
 </script>
 {%endblock%}

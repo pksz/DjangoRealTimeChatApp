@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Group(models.Model):
     group_name=models.CharField(max_length=40)
     group_description=models.TextField(blank=True,null=True)
+    users_online=models.ManyToManyField(User,related_name='online_in_group',blank=True)
     #optional
     #group_icon= models.ImageField(blank=True,null=True)
     #slug=models.SlugField()

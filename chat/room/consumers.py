@@ -11,14 +11,21 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         
         self.user=self.scope['user']
-        print(self.scope['url_route']['kwargs'])
         self.room_name=self.scope['url_route']['kwargs']['pk']
         self.chatroom=get_object_or_404(Group,id=self.room_name)
+
+        #add group to websocket
         async_to_sync(self.channel_layer.group_add)(
             self.chatroom.group_name,           #need room name as str
             self.channel_name,
-          )   
+          )    
         
+
+        #check for online user status
+        if self.user not in self.chatroom.users_online.all():
+            self.chatroom.users_online.add(self.user)
+            self.update_online_count()
+
         self.accept()
     
 
@@ -26,7 +33,6 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json)
 
         msg=text_data_json['chat_message']
 
@@ -41,11 +47,12 @@ class ChatConsumer(WebsocketConsumer):
 
         event={
             'type':'message_handler',
+            'action':"send_message",
             'message':msg,
             'message_id':message.id   
 
         }
-
+        # to all groups
         async_to_sync(self.channel_layer.group_send)(self.chatroom.group_name,event)
         
 
@@ -56,24 +63,41 @@ class ChatConsumer(WebsocketConsumer):
         
         #context will be sent to frontend
         context={
-            'message':chatmessage,
-            'author':self.user
+            'message':chatmessage.chat_message,
+            'action': 'send_message',
+            'user':self.user.username
         }
         
-        #html=render_to_string('room/group.html',context=context)
+        #~~html=render_to_string('room/group.html',context=context)~~
 
-        self.send(text_data=json.dumps({'message':chatmessage.chat_message,
-            'user': self.user.username}))
+        #frontend updates the current page by using this data
+        self.send(text_data=json.dumps(context))
 
 
 
 
     def disconnect(self, code):
-     async_to_sync(self.channel_layer.group_discard)(
-            self.chatroom.group_name,
-            self.channel_name,
-            
-            
-        )
+        async_to_sync(self.channel_layer.group_discard)(
+            self.chatroom.group_name, #needs it in str
+            self.channel_name)
+
+        if self.user in self.chatroom.users_online.all():
+            self.chatroom.users_online.remove(self.user)
+            self.update_online_count()
+
+
+    def update_online_count(self):
+        online_count=0
+        online_count=self.chatroom.users_online.count() - 1
+        event={
+            'type':'online_count_handler',
+            'action':'online_user_update',
+            'online_count':online_count
+        }
+        async_to_sync(self.channel_layer.group_send)(self.chatroom.group_name,event)
 
     
+    def online_count_handler(self,event):
+        online_count=event['online_count']
+        print(online_count)
+        self.send(text_data=json.dumps({'action':'online_user_update','online_count':online_count}))
