@@ -1,6 +1,6 @@
 from typing import Any
 from django.db.models.query import QuerySet
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic import ListView,DetailView,TemplateView
 from . models import Group,GroupMessage
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -35,9 +35,9 @@ class ChatGroup(LoginRequiredMixin,DetailView):
         context['sent_chats']=GroupMessage.objects.filter(group=self.object)
         context['form']=CreateMessage()
         context['room_name']=Group.objects.get(slug =self.kwargs['slug'])
-        y=Group.objects.get(slug=self.kwargs['slug'])
+       # y=Group.objects.get(slug=self.kwargs['slug'])
 
-        print(y.__dict__)
+        #print(y.__dict__)
         return context
 
 
@@ -78,14 +78,16 @@ class ChatView(LoginRequiredMixin,View):
 
 
 
-#handles private message b/w users
+
+
+
+#handles private message b/w users and redirects to new group
 class PrivateChat(LoginRequiredMixin,View):  
     model=Group
     private_chatroom_name=''
-    #create anew group if none exist
+    #create a new group if none exist should be post request
     def get(self, request,**kwargs: Any) -> dict[str, Any]:
         private_chatroom_name=self.request.user.username+self.kwargs['slug']
-        print(private_chatroom_name)
 
         private_chatroom,created=Group.objects.get_or_create(group_name=private_chatroom_name,
                                                              defaults={'group_description':f'{self.request.user.username}{self.kwargs['slug']} group',
@@ -100,23 +102,25 @@ class PrivateChat(LoginRequiredMixin,View):
 
 
         #context= super().get_context_data(**kwargs)
-       # context['sent_chats']=GroupMessage.objects.filter(group=self.object)
-       # context['form']=CreateMessage()
-        #context['room_name']=Group.objects.get(slug =self.kwargs['slug'])
-           
+        context={}
+        print(private_chatroom.pk)
+        context['sent_chats']=GroupMessage.objects.filter(group=private_chatroom.pk)
+        context['form']=CreateMessage()
+        context['room_name']=Group.objects.get(slug=private_chatroom.slug)
+        context['pk']=private_chatroom.pk
+          
 
-        print(private_chatroom)
-        return render(request,'room/privatechat.html',{'context':context})
+        print(private_chatroom.group_name)
+        return redirect('group',slug=private_chatroom.slug)
+        #return render(request,'room/privatechat.html',context=context)
+
+
+
+
+   
     
     
-class PrivateChatView(LoginRequiredMixin,View):
-  def get(self, request, *args, **kwargs):
-      view = PrivateChat.as_view()
-      return view(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-      view = ChatForm.as_view()
-      return view(request, *args, **kwargs)
 
     
 

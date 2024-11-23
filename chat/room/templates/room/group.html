@@ -37,6 +37,7 @@
 <script>
     // Connect to WebSocket
     const roomName=JSON.parse(document.getElementById('room-name').textContent)
+    console.log(roomName)
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
@@ -79,8 +80,7 @@
             console.log(data.errors)
         }
               
-        console.log(data.action)
-        console.log(event.data)
+
         
     };
 </script>

@@ -1,18 +1,18 @@
 {%extends "user/base.html" %}
 
 {%block content%}
-<h1>{{object.group_name}}</h1>
+<h1>{{context.room_name}}</h1>
 <div>
     <a href="{%url 'chats'%}">All chats</a>
-    {{object_list}}
+    
 </div>
 <div id="online_count" >
     Online users: <span id="user_count">0</span>
 </div>
 <div id="chatlog">
-    {%if sent_chats %}
+    {%if context.sent_chats %}
 
-        {%for message in sent_chats.reverse%}
+        {%for message in context.sent_chats.reverse%}
             <ul>{{message.author}} : {{message.chat_message}}</ul>
         {%endfor%}
 
@@ -34,10 +34,11 @@
 {%endblock%}
 
 {%block scripts%}
-{{object.slug|json_script:"room-name"}}
+{{context.pk|json_script:"room-name"}}
 <script>
     // Connect to WebSocket
-    const roomName=JSON.parse(document.getElementById('room-name').textContent)
+    const roomName=JSON.parse(document.getElementById('room-name').textContent);
+    console.log(roomName);
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
@@ -47,7 +48,7 @@
     );
 
     const form = document.getElementById('myForm');
-    responseDiv=document.getElementById('response')
+    responseDiv=document.getElementById('response');
 
     // Form submission event
     form.addEventListener('submit', function(event) {

@@ -5,5 +5,5 @@ from . import views
 urlpatterns=[
     path('',views.ChatRoom.as_view(),name='chats'),
     path('<slug:slug>/',views.ChatView.as_view(),name='group'),
-    path('private/<slug:slug>/',views.PrivateChatView.as_view(),name='start_private_chat'),
+    path('private/<slug:slug>/',views.PrivateChat.as_view(),name='start_private_chat'),
 ]

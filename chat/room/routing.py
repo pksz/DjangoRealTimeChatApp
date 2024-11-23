@@ -5,5 +5,4 @@ from .consumers import ChatConsumer
 #use path for normal pattern or repath for regext one 
 websocket_urlpatterns=[
     path('ws/chat/<slug:slug>/',ChatConsumer.as_asgi()),
-    path('ws/chat/private/<slug:slug>/',ChatConsumer.as_asgi()),
 ]
