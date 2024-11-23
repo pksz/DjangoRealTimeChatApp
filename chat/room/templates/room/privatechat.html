@@ -1,9 +1,10 @@
 {%extends "user/base.html" %}
 
 {%block content%}
-<h1>{{object}}</h1>
+<h1>{{object.group_name}}</h1>
 <div>
     <a href="{%url 'chats'%}">All chats</a>
+    {{object_list}}
 </div>
 <div id="online_count" >
     Online users: <span id="user_count">0</span>
@@ -33,14 +34,14 @@
 {%endblock%}
 
 {%block scripts%}
-{{object.pk|json_script:"room-name"}}
+{{object.slug|json_script:"room-name"}}
 <script>
     // Connect to WebSocket
     const roomName=JSON.parse(document.getElementById('room-name').textContent)
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
-        + '/ws/chat/'
+        + 'ws/chat/private/'
         + roomName
         + '/'
     );

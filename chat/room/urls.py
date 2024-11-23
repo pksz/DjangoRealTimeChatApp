@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns=[
     path('',views.ChatRoom.as_view(),name='chats'),
-    path('<int:pk>/',views.ChatView.as_view(),name='group'),
+    path('<slug:slug>/',views.ChatView.as_view(),name='group'),
+    path('private/<slug:slug>/',views.PrivateChatView.as_view(),name='start_private_chat'),
 ]

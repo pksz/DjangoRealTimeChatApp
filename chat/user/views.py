@@ -53,7 +53,7 @@ class UserProfile(LoginRequiredMixin,DetailView):
 
 
 
-class UserUpdate(UpdateView):
+class UserUpdate(LoginRequiredMixin,UpdateView):
     model=Profile
     fields=[
         'displayname',

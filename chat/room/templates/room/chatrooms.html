@@ -6,7 +6,7 @@
 
 <div>
     {%for groupname in object_list%}
-       <a href="{%url 'group' groupname.pk %}">{{groupname}} </a>
+       <a href="{%url 'group' slug=groupname.slug %}">{{groupname}} </a>
        
     {%endfor%}
 </div>

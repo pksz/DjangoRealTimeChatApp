@@ -7,15 +7,20 @@
 </div>
 
 <div>
-    <li>{{ user.profile.avatar}}</li>
-    <img src="{{user.profile.avatar}}" alt="profile.pic">
+    <li>{{ profile.avatar}}</li>
+    <img src="{{profile.avatar}}" alt="profile.pic">
     <li>
-    <ul> username : {{user.username}}</ul>
-    <ul> displayname : {{user.profile.displayname}}</ul>
-    <ul> description : {{user.profile.info}}</ul>
+    <ul> username : {{profile.user.username}}</ul>
+    <ul> displayname : {{profile.displayname}}</ul>
+    <ul> description : {{profile.info}}</ul>
     </li>
 </div>
+{% if user.username == profile.user.username%}
+    <a href="{%url 'update' user.profile.pk %}"> Update Profile</a>
+{%endif%}
+    <a href="{%url 'home'  %}"> Home</a>
 
-<a href="{%url 'update' user.profile.pk %}"> Update Profile</a>
-<a href="{%url 'home'  %}"> Home</a>
+{% if user.username != profile.user.username%}
+    <a href="{%url 'start_private_chat' slug=profile.user.username %}"> Message {{profile.user.username}}</a>
+{%endif%}
 {%endblock%}
