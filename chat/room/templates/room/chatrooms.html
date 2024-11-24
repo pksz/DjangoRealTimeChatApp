@@ -2,16 +2,39 @@
 
 {%block content%}
 <h1>group</h1>
-
-
 <div>
-    {%for groupname in object_list%}
-       <a href="{%url 'group' slug=groupname.slug %}">{{groupname}} </a>
+<!--handles public chatrooms-->
+    <div>
+    {%for groupname in public_chats%}
+       <a href="{%url 'group' slug=groupname.slug %}">Enter Group {{groupname}}  </a>
+       <br/>
        
     {%endfor%}
+    </div>
+    <br/>
+<!--handles private chatrooms-->
+    <div>
+    {%for groupname in private_chats %}
+       <a href="{%url 'group' slug=groupname.slug %}">Join {{groupname}}  </a>
+       <br/>
+       
+    {%endfor%}
+    </div>
+    <br/>
+<!--handles owned chatrooms-->
+    <div>
+    {%for groupname in managed_chats %}
+       <a href="{%url 'delete_chatroom' slug=groupname.slug %}">Delete {{groupname}}  </a>
+       <br/>
+       
+    {%endfor%}
+    </div>
 </div>
+
 <div>
+    <br/>
     <a href="{%url 'newgroup'%}">Create new group</a>
+    <br/>
     <a href="{%url 'home'%}">Home</a>
 </div>
 

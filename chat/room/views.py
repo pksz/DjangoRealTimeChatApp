@@ -13,17 +13,20 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.http import Http404
 
 # Create your views here.
 #lists public chatrooms
 class ChatRoom(LoginRequiredMixin,ListView):
     model=Group
     template_name='room/chatrooms.html'
-
-    def get_queryset(self) -> QuerySet[Any]:
-        queryset=Group.objects.all().filter(is_private=False)
-        return queryset
-
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context=super().get_context_data(**kwargs)
+        context['public_chats']=Group.objects.filter(is_private=False)
+        context['private_chats']=Group.objects.filter(is_private=True)
+        context['managed_chats']=Group.objects.filter(admin=self.request.user)
+        return context
 
 #public chatroom view
 class ChatGroup(LoginRequiredMixin,DetailView):
@@ -102,7 +105,19 @@ class CreateNewChatRoom(LoginRequiredMixin,CreateView):
 #delete chatrooms 
 class DeleteChatroom(LoginRequiredMixin,DeleteView):
     model=Group
-    success_url=reverse_lazy('chatroom')
+    template_name='room/chatroomdelete.html'
+    def get_object(self, queryset=None):
+        # Get the chat group object
+        obj = super().get_object(queryset)
+        
+        # Check if the current user is the admin of this group
+        if ((obj.admin != self.request.user) or (obj.is_private==True and self.request.user not in obj.members)):
+            raise Http404("You are not authorized to delete this group")
+        
+        return obj
+
+    def get_success_url(self):
+        return reverse_lazy('chats')
 
 
 
