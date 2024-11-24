@@ -9,7 +9,7 @@ class Group(models.Model):
     group_description=models.TextField(blank=True,null=True)
     users_online=models.ManyToManyField(User,related_name='online_in_group',blank=True)
     members=models.ManyToManyField(User,related_name='members',blank=True)
-
+    admin=models.ForeignKey(User,blank=True,null=True,on_delete=models.SET_NULL)
     is_private=models.BooleanField(default=False)
     #optional
     #group_icon= models.ImageField(blank=True,null=True)

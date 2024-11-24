@@ -1,10 +1,10 @@
 from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import render,get_object_or_404,redirect
-from django.views.generic import ListView,DetailView,TemplateView
+from django.views.generic import ListView,DetailView,CreateView,DeleteView
 from . models import Group,GroupMessage
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CreateMessage
+from .forms import CreateMessage,CreateChatRoom
 from django.http import HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.views.generic import FormView
@@ -78,6 +78,31 @@ class ChatView(LoginRequiredMixin,View):
 
 
 
+#create new chatroom
+class CreateNewChatRoom(LoginRequiredMixin,CreateView):
+    model=Group
+    form_class=CreateChatRoom
+    template_name='room/createnewchatroom.html'
+
+    def form_valid(self, form) -> HttpResponse:
+        newgroup=form.save(commit=False)
+        newgroup.admin=self.request.user
+        newgroup.save()
+        newgroup.members.add(self.request.user)
+        
+        object=newgroup
+        
+        return redirect('group', slug=object.slug)
+
+    def get_success_url(self):
+        # Redirect to the object detail page by its slug
+        return reverse_lazy('group', kwargs={'slug': self.object.slug})
+
+
+#delete chatrooms 
+class DeleteChatroom(LoginRequiredMixin,DeleteView):
+    model=Group
+    success_url=reverse_lazy('chatroom')
 
 
 
