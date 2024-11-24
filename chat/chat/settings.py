@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
+    'crispy_bootstrap5',
+    'crispy_forms',
     'user.apps.UserConfig',
     'room',
 
@@ -71,6 +73,10 @@ TEMPLATES = [
         },
     },
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 #WSGI_APPLICATION = 'chat.wsgi.application'
 ASGI_APPLICATION = 'chat.asgi.application'
@@ -137,4 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR/ 'media/'
 MEDIA_URL = '/media/'
+
+
 

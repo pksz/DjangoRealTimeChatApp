@@ -1,41 +1,70 @@
 {%extends "user/base.html" %}
 
 {%block content%}
-<h1>group</h1>
-<div>
-<!--handles public chatrooms-->
+<table class="table table-hover">
+    <tr class="table-info">
+        <th scope="row "><h1 class="offset-5">Chatrooms</h1></th>
+    </tr>
+</table>
+
+<div class="offset-1">
     <div>
-    {%for groupname in public_chats%}
-       <a href="{%url 'group' slug=groupname.slug %}">Enter Group {{groupname}}  </a>
-       <br/>
-       
-    {%endfor%}
-    </div>
-    <br/>
-<!--handles private chatrooms-->
-    <div>
-    {%for groupname in private_chats %}
-       <a href="{%url 'group' slug=groupname.slug %}">Join {{groupname}}  </a>
-       <br/>
-       
-    {%endfor%}
-    </div>
-    <br/>
-<!--handles owned chatrooms-->
-    <div>
-    {%for groupname in managed_chats %}
-       <a href="{%url 'delete_chatroom' slug=groupname.slug %}">Delete {{groupname}}  </a>
-       <br/>
-       
-    {%endfor%}
+ <!--handles public chatrooms-->
+        <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" data-bs-toggle="tab" href="#public-chatrooms" aria-selected="true" role="tab"  >Public Chatrooms</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" data-bs-toggle="tab" href="#private-chatrooms" aria-selected="false" role="tab"   >Private Chatrooms</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link"  data-bs-toggle="tab" href="#manage-chatrooms" aria-selected="false"  role="tab" aria-controls="manage-chatrooms">Manage</a>
+        </li>
+        </ul>
     </div>
 </div>
 
-<div>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade active show" id="public-chatrooms" role="tabpanel" >
+        <div>
+        {%for groupname in public_chats%}
+            <a class="text-secondary-emphasis offset-1" href="{%url 'group' slug=groupname.slug %}">Enter Group {{groupname}}  </a>
+            <br>
+       
+        {%endfor%}
+        </div>
+    </div>
+    
+    <!--handles private chatrooms-->
+    <div class="tab-pane fade" id="private-chatrooms" role="tabpanel" >
+        <div>
+        {%for groupname in private_chats %}
+            <a  class="text-primary-emphasis offset-1" href="{%url 'group' slug=groupname.slug %}">Join {{groupname}}  </a>
+       
+            <br>
+        {%endfor%}
+        </div>
+    </div>
+    
+<!--handles owned chatrooms-->
+    <div class="tab-pane fade" id="manage-chatrooms" role="tabpanel" >
+        <div>
+        {%for groupname in managed_chats %}
+            <a class="offset-1 text-primary-emphasis" href="{%url 'delete_chatroom' slug=groupname.slug %}">Delete {{groupname}}  </a>
+        <br/>
+            
+        {%endfor%}
+        </div>
+    </div>
+</div>
+
+<div class=" offset-1">
+    <div class="">
     <br/>
     <a href="{%url 'newgroup'%}">Create new group</a>
     <br/>
     <a href="{%url 'home'%}">Home</a>
+</div>
 </div>
 
 

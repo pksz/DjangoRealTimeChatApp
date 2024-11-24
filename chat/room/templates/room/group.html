@@ -1,14 +1,20 @@
 {%extends "user/base.html" %}
-
+{% load crispy_forms_tags %}
 {%block content%}
-<h1>{{object}}</h1>
+<table class="table table-hover">
+<tr class="table-info">
+    <th scope="row "><h1 class="offset-1">{{object}}</h1></th>
+</tr>
+</table>
+<div class="offset-1">
 <div>
     <a href="{%url 'chats'%}">All chats</a>
 </div>
-<div id="online_count" >
+<div class="mb-1" id="online_count" >
     Online users: <span id="user_count">0</span>
 </div>
-<div id="chatlog">
+
+<div class="mt-4 pl-10" id="chatlog">
     {%if sent_chats %}
 
         {%for message in sent_chats.reverse%}
@@ -20,15 +26,17 @@
 
     {%endif%}
     
-    </div>
+    
+        <div class="col-sm-3 col-form-label ">
             <form action="" method="post" id="myForm">
                 {%csrf_token%}
-                {{form.as_p}}
-                <button type="submit">Send</button>
+                {{form|crispy}}
+                <button class="btn btn-secondary" type="submit">Send</button>
             </form>
-    <div>
+        </div>
 
         <div id="response"></div>
+</div>
 </div>
 {%endblock%}
 
