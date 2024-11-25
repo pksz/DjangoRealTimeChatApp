@@ -1,16 +1,20 @@
 {%extends "user/base.html"%}
-
+{% load crispy_forms_tags %}
+{%block title%}<title>Delete Chatroom</title>{%endblock%}
 {%block content%}
 
-<h1>Are you sure you want to delete the group "{{ object.name }}"?</h1>
-<form action="" method="post">
+<div class="">
+<h1 class="alert alert-dismissible alert-warning off padding">Are you sure you want to delete the group "{{ object }}"?</h1>
+<form  method="post">
     {%csrf_token%}
 
-   <input type="submit" value="Delete this chatroom">
+   <input class="btn btn-outline-danger" type="submit" value="Delete this chatroom">
 
 </form>
 <div>
+    <br>
+    <br>
     <a href="{%url 'home'%}"> Home</a>
 </div>
-
+</div>
 {%endblock%}

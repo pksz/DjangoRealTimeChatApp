@@ -14,23 +14,38 @@
     {%block title%}<title>Homepage</title>{%endblock%}
 </head>
 <body>
+    
     {%block content%}
+    <div>
+        <table class="table table-hover">
+          <tr class="table-info">
+              <th scope="row "><h1 class="offset-1">Chat Application</h1></th>
+          </tr>
+          </table>
+      </div>
 
     {%if user.is_authenticated%}
 
-    <div>
-        <form action="{% url 'logout'%}" method="post">
-            {%csrf_token%}
-            <button type="submit">Logout</button>
+    <div  class="container">
+        <div class="row">
+            <div class="col">
+                <a href="{% url 'profile' user.profile.pk%}">Profile</a>
+                <br>
+                <a href="{% url 'chats' %}">Chat Rooms</a>
+            </div>
 
-        </form>
-        
-        <a href="{% url 'profile' user.profile.pk%}">Profile</a>
-        <a href="{% url 'chats' %}">Chat Rooms</a>
+            <div class="col">
+                <form action="{% url 'logout'%}" method="post">
+                    {%csrf_token%}
+                    <button class="btn btn-outline-secondary offset-4" type="submit">Logout</button>
+
+                </form>
+            </div>
+        </div>
     </div>
 
     {%else%}
-       <div>
+       <div class="offset-1">
         <a href="{% url 'register'%}">register</a>
         <a href="{%url 'login' %}">login</a>
        </div>

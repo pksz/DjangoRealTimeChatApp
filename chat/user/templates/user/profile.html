@@ -1,20 +1,28 @@
 {%extends "user/base.html"%}
 
+{%block title%}<title>Proflie</title>{%endblock%}
 {%block content%}
 
 <div>
-    <h1>profile page</h1>
-</div>
+    <table class="table table-hover">
+      <tr class="table-info">
+          <th scope="row "><h1 class="offset-1">Profile</h1></th>
+      </tr>
+      </table>
+  </div>
 
-<div>
-    <li>{{ profile.avatar}}</li>
-    <img src="{{profile.avatar}}" alt="profile.pic">
-    <li>
-    <ul> username : {{profile.user.username}}</ul>
-    <ul> displayname : {{profile.displayname}}</ul>
-    <ul> description : {{profile.info}}</ul>
-    </li>
+<div class="offset-1">
+    <ul>
+        <img src="{{profile.avatar}}" alt="profile.pic">
+    </ul>
+    <ul class="alert alert-dismissible alert-secondary col-sm-5">
+        <p class="alert alert-dismissible alert-dark col-sm-7">User Details</p>
+    <p> username : {{profile.user.username}}</p>
+    <p> displayname : {{profile.displayname}}</p>
+    <p> description : {{profile.info}}</p>
+    </ul>
 </div>
+<div class="offset-1">
 {% if user.username == profile.user.username%}
     <a href="{%url 'update' user.profile.pk %}"> Update Profile</a>
 {%endif%}
@@ -24,3 +32,4 @@
     <a href="{%url 'start_private_chat' slug=profile.user.username %}"> Message {{profile.user.username}}</a>
 {%endif%}
 {%endblock%}
+</div>

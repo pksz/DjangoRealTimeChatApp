@@ -1,14 +1,19 @@
 {%extends "user/base.html"%}
-
+{% load crispy_forms_tags %}
+{%block title%}<title>Login</title>{%endblock%}
 {%block content%}
+
+<div class="col-sm-4 offset-1">
 <form action="" method="post">
     {%csrf_token%}
-    {{form.as_p}}
+    {{form|crispy}}
 
-   <input type="submit" value="Login">
+   <input class="btn btn-outline-success" type="submit" value="Login">
 
 </form>
-<div>
+</div>
+<div class="offset-1">
+    <br>
     <a href="{%url 'register'%}">Need an Account</a>
 </div>
 
